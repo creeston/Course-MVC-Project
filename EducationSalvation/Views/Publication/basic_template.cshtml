@@ -1,0 +1,31 @@
+﻿@model EducationSalvation.Models.PubclicationShowingModel
+@using EducationSalvation.Helpers
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div >
+    <div>
+        <div id="templateHeader">
+            <h1 id="title">@Model.Title</h1>
+            <h4 id="description">@Model.Description</h4>
+            <h4>
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="label label-default">@tag</span>
+                }
+            </h4>
+        </div>
+        <div id="template_body">
+            <img src='@Model.Images[0]' class="img-rounded" />
+            @Html.Markdown(Model.Markdown);
+            <iframe type="text/html"
+                    width="640"
+                    height="385"
+                    src="http://www.youtube.com/embed/@Model.Videos[0]"
+                    frameborder="0"></iframe>
+            <youtube-video video-id="@Model.Videos[0]"></youtube-video>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-app="educationModule" ng-controller="PostController as post" ng-init="post.PublicationInit(@ViewBag.PublicationIndex)">
+    <div id="content">
+        <div id="templateHeader">
+            <h1 id="title">{{post.publication.Title}}</h1>
+            <h4 id="description">{{post.publication.Description}}</h4>
+            <h4>
+                <span class="label label-default" ng-repeat="tag in post.publication.Tags">{{tag}}</span>
+            </h4>
+        </div>
+        <div id="template_body">
+            <img src="{{post.publication.Images[0]}}" class="img-rounded" />
+            <wiz-markdown content="post.publication.Markdown"></wiz-markdown>
+            <youtube-video video-id="post.publication.Videos[0]"></youtube-video>
+        </div>
+    </div>
+    User rating:{{post.publication.Stars}}
+    
+    <div ng-hide="post.publication.IsUserAlreadyGraduateIt">
+        <input id="rangeInput" type="range" ng-model="post.range" min="1" max="10"> <span>{{post.range}}</span>
+        <button ng-click="post.sendGrade()">Graduate!</button>
+    </div>
+    <div>
+        <div>
+            <textarea placeholder="type your opinion" ng-model="post.commentContent"></textarea>
+            <button ng-click="post.sendComment()">Send</button>
+        </div>
+
+        <div ng-repeat="comment in post.publication.Comments">
+            <p>{{comment.Content}}</p>
+            <div>
+                <span>{{comment.Date}}</span>
+                <span>{{comment.Author}}</span>
+                <span>{{comment.Rating}}</span>
+                <button ng-hide="comment.IsUserAlreadyLikedIt" ng-click="post.likeComment(comment.Id)">Like!</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+

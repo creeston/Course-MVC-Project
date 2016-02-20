@@ -1,0 +1,10 @@
+﻿[
+  {
+    "name": "basic template",
+    "url": "Templates/template1.html"
+  },
+  {
+    "name": "basic template w/o description",
+    "url": "Templates/template2.html"
+  }
+]

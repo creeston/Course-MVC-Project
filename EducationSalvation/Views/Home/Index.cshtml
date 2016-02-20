@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+    <button type="button" class="btn btn-default btn-number">
+        <span class="glyphicon glyphicon-plus">@Html.ActionLink("create", "Create", "Publication")</span>
+    </button>
+    
+    <div ng-app="educationModule" ng-controller="IndexController as index" ng-init="index.getThumbnails();">
+        <div ng-repeat="post in index.publicationThumbnails">
+            <h2>{{post.Title}}</h2>
+            <h3>{{post.Description}}</h3>
+            <h4>
+                <span class="label label-default" ng-repeat="tag in post.Tags">{{tag}}</span>
+            </h4>
+            <a ng-href="/Publication/Post/{{post.Id}}">expand</a>
+        </div>
+    </div>

@@ -1,0 +1,58 @@
+﻿@model EducationSalvation.Models.PublicationCreatingModel
+
+@* http://grumpywizards.com/ngmarkdown/ markdown lib *@
+@*https://bitbucket.org/reyramos/angular-dropzone/overview dropzone directive*@
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #dropZone {
+        background: gray;
+        border: black dashed 3px;
+        width: 200px;
+        padding: 50px;
+        text-align: center;
+        color: white;
+    }
+    .dropzone {
+        width:inherit;
+        height:inherit;
+    }
+</style>
+
+
+
+<style>
+    #container {
+        width:900px;
+        margin-right: 15%;
+        margin-left:15%;
+    }
+
+    textarea {
+        min-width: 780px;
+        min-height: 200px;
+    }
+
+</style>
+
+<div ng-app="educationModule" ng-controller="TemplateController as template"  id="container">
+
+    <div id="templatesContainer" ng-controller="MarkdownController as marked">
+        <h2>Choose tempate</h2>
+        <select class="form-control" ng-model="marked.template" ng-options="t.Name for t in marked.templates">
+            <option value="">(blank)</option>
+        </select>
+        <div class="jumbotron" id="template" ng-include="marked.template.Path | trusted"></div>
+    </div>
+    <div ng-controller="PublicateController as publicate">
+        <button class="btn btn-default" ng-click="publicate.Publish()">Publish</button>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -1,0 +1,76 @@
+﻿
+    
+    <button ng-click="template.showPreview()">Preview</button>
+
+    <div id="templateBody" ng-hide="template.previewMode">
+        <form name="headerForm" novalidate>
+            <div class="form-group" ng-class="{'has-error': headerForm.title.$touched && headerForm.title.$invalid }">
+                <label for="titleInput">Title</label>
+                <input type="text" class="form-control" 
+                       ng-model="template.title" id="titleInput" name="title"
+                       required> 
+                <div class="help-block" ng-messages="headerForm.title.$error" ng-if="headerForm.title.$touched">
+                    <p ng-message="required">Title is required.</p>
+                </div>
+            </div>
+
+            <div class="form-group" 
+                 ng-class="{ 'has-error': headerForm.description.$touched && headerForm.description.$invalid }">
+                <label for="descriptionInput">Description</label>
+                <input type="text" class="form-control" 
+                       ng-model="template.description" id="descriptionInput" name="description"
+                       required> 
+
+                <div class="help-block" 
+                     ng-messages="headerForm.description.$error" ng-if="headerForm.description.$touched">
+                    <p ng-message="required">Description is required.</p>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error': headerForm.tags.$touched && headerForm.tags.$invalid }">
+                <label for="tagsInput">Tags</label>
+                <input class="form-control" type="text" 
+                       id="tagsInput" ng-model="template.tags" name="tags" 
+                       ng-focus="focused = true" ng-blur="focused=false"
+                       ng-list required >
+                <div class="help-block" ng-messages="headerForm.tags.$error" ng-if="headerForm.tags.$touched">
+                    <p ng-message="required">Tags are required.</p>
+                </div>
+                <div class="list-group" >
+                    <button ng-repeat="helpfulTag in template.helpfulTags"  ng-click="template.setTag(helpfulTag)" type="button" class="list-group-item">{{helpfulTag}}</button>
+                </div>
+                {{template.tags}}
+            </div>>
+        </form>
+
+        <div style="width: 700px; height:400px">
+            <form class="dropzone" dropzone="template.dropzoneConfig" id="0"></form>
+         </div>
+
+         <wiz-markdown-editor content="template.markdown">
+             <wiz-toolbar-button command="italic">Italic</wiz-toolbar-button>
+         </wiz-markdown-editor>
+
+         <label for="videoInput">Youtube video url</label>
+         <div class="input-group">
+             <span class="input-group-addon" id="basic-addon0">https://www.youtube.com/watch?v=</span>
+             <input type="text" ng-model="template.videos[0]" class="form-control" id="videoInput" aria-describedby="basic-addon0" placeholder="id"> <br>
+         </div>
+
+</div>
+
+    <div id="preview" ng-show="template.previewMode">
+        <div id="templateHeader">
+            <h1 id="title">{{template.title}}</h1>
+            <h4 id="description">{{template.description}}</h4>
+            <h4>
+                <span class="label label-default" ng-repeat="tag in template.tags">{{tag}}</span>
+            </h4>
+        </div>
+        <div id="template_body">
+            <img src="{{template.images[0]}}" class="img-rounded" />
+            <wiz-markdown content="template.markdown"></wiz-markdown>
+            <youtube-video video-id="template.videos[0]"></youtube-video>
+        </div>
+    </div>
+

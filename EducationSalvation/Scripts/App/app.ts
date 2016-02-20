@@ -32,6 +32,8 @@ appModule.controller("PostController", ["$scope", '$http', 'wizMarkdownSvc',($sc
     new EducationApp.Controllers.PostController($scope, $http, wizMarkdownSvc)]);
 appModule.controller("IndexController", ['$scope', '$http', ($scope, $http) =>
     new EducationApp.Controllers.IndexController($scope, $http)]);
+appModule.controller("UserInfoController", ['$scope', '$http', ($scope, $http) =>
+    new EducationApp.Controllers.UserInfoController($scope, $http)]);
 
 appModule.filter('trusted', ['$sce', function ($sce) {
     return (url) => { return $sce.trustAsResourceUrl(url); };

@@ -40,7 +40,7 @@ namespace EducationSalvation.Models
     public class PublicationThumbnailModel
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public string UserNickname { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string[] Tags { get; set; }
@@ -148,7 +148,6 @@ namespace EducationSalvation.Models
         public string UserId { get; set; }
     }
 
-
     public class ShowingAdditionalUserInfo
     {
         public string Nickname { get; set; }
@@ -160,25 +159,11 @@ namespace EducationSalvation.Models
         public string Interests { get; set; }
 
         public PublicationThumbnailModel[] Publications;
+        
     }
 
     public class EditableAdditionalUserInfo
     {
-        public string Gender { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
-        public string Location { get; set; }
-        public string Interests { get; set; }
-    }
-
-    public class CreatableAdditionalUserInfo
-    {
-        [Required]
-        [Display(Name = "User name")]
-        [Remote("DoesUserNicknameExist", "Manage", 
-            HttpMethod = "POST", 
-            ErrorMessage = "User name already exists. Please enter a different user name.")]
         public string Nickname { get; set; }
 
         public string Gender { get; set; }
@@ -187,6 +172,22 @@ namespace EducationSalvation.Models
         public int Age { get; set; }
         public string Location { get; set; }
         public string Interests { get; set; }
+
+        public string[] Nicknames { get; set; }
+    }
+
+    //DELETE
+    public class CreatableAdditionalUserInfo
+    {
+        public string Nickname { get; set; }
+
+        public string Gender { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int Age { get; set; }
+        public string Location { get; set; }
+        public string Interests { get; set; }
+        public string[] Nicknames { get; set; }
     }
 
     public class AdditionalUserInfo
@@ -237,7 +238,6 @@ namespace EducationSalvation.Models
         public int PublicationId { get; set; }
         public int Value { get; set; }
     }
-
 
     public class RatingModel
     {

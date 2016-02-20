@@ -35,7 +35,7 @@
             <p>{{comment.Content}}</p>
             <div>
                 <span>{{comment.Date}}</span>
-                <span>{{comment.Author}}</span>
+                <a ng-href="/Manage/Profiles/{{comment.Author}}">{{comment.Author}}</a>
                 <span>{{comment.Rating}}</span>
                 <button ng-hide="comment.IsUserAlreadyLikedIt" ng-click="post.likeComment(comment.Id)">Like!</button>
             </div>

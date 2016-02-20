@@ -28,6 +28,9 @@ appModule.controller("PostController", ["$scope", '$http', 'wizMarkdownSvc', fun
 appModule.controller("IndexController", ['$scope', '$http', function ($scope, $http) {
         return new EducationApp.Controllers.IndexController($scope, $http);
     }]);
+appModule.controller("UserInfoController", ['$scope', '$http', function ($scope, $http) {
+        return new EducationApp.Controllers.UserInfoController($scope, $http);
+    }]);
 appModule.filter('trusted', ['$sce', function ($sce) {
         return function (url) { return $sce.trustAsResourceUrl(url); };
     }]);

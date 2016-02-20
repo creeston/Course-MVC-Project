@@ -1,0 +1,34 @@
+﻿@model EducationSalvation.Models.ShowingAdditionalUserInfo
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item">@Model.Nickname</li>
+        <li class="list-group-item">@Model.FirstName</li>
+        <li class="list-group-item">@Model.LastName</li>
+        <li class="list-group-item">@Model.Age</li>
+        <li class="list-group-item">@Model.Gender</li>
+        <li class="list-group-item">@Model.Location</li>
+    </ul>
+    @Html.ActionLink("Edit", "EditAdditionalInfo", "Manage")
+
+    @foreach (var Publication in Model.Publications)
+    {
+            <div >
+                <h2>@Publication.Title</h2>
+                <h3>@Publication.Description</h3>
+                <h4>
+                    @foreach (var tag in Publication.Tags)
+                    {
+                        <span class="label label-default" >@tag</span>
+                    }
+                </h4>
+                <a href="/Publication/Post/@Publication.Id">expand</a>
+                <a href="/Manage/Profiles/@Publication.UserNickname">expand</a>
+            </div>
+    }
+
+</div>

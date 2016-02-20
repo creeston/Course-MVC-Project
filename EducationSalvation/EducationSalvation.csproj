@@ -394,6 +394,7 @@
     <Content Include="Views\Publication\basic_template.cshtml" />
     <Content Include="Views\Manage\EditAdditionalInfo.cshtml" />
     <Content Include="Views\Manage\CreateAdditionalUserInfo.cshtml" />
+    <Content Include="Views\Manage\Profiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

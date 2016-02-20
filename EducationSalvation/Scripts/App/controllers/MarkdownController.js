@@ -9,7 +9,7 @@ var EducationApp;
             }
             IndexController.prototype.getThumbnails = function () {
                 var _this = this;
-                this.http({ method: 'GET', url: 'GetPublicationThumbnails' })
+                this.http({ method: 'GET', url: '/Home/GetPublicationThumbnails' })
                     .success(function (data) { _this.publicationThumbnails = data; });
             };
             return IndexController;
@@ -178,6 +178,44 @@ var EducationApp;
             return PostController;
         })();
         Controllers.PostController = PostController;
+        var UserInfoController = (function () {
+            function UserInfoController($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.uniqueCheckingLabel = "Check";
+            }
+            UserInfoController.prototype.getUserInfo = function (userInfo) {
+                this.info = JSON.parse(userInfo);
+            };
+            UserInfoController.prototype.checkUniqueness = function () {
+                this.uniqueCheckingLabel = "Checking...";
+                if (this.isNicknameUnique())
+                    this.uniqueCheckingLabel = "Name is unique!";
+                else
+                    this.uniqueCheckingLabel = "Name is already taken";
+            };
+            UserInfoController.prototype.isNicknameUnique = function () {
+                var result = true;
+                this.uniqueCheckingLabel = "checking...";
+                for (var i = 0; i < this.info.Nicknames.length; i++)
+                    if (this.info.Nickname == this.info.Nicknames[i])
+                        result = false;
+                return result;
+            };
+            UserInfoController.prototype.sendUserInfo = function () {
+                var scope = this;
+                if (scope.Validation())
+                    this.http.post('/Manage/CreateAdditionalUserInfo', { model: scope.info });
+            };
+            UserInfoController.prototype.Validation = function () {
+                var result = true;
+                if (!this.isNicknameUnique())
+                    result = false;
+                return result;
+            };
+            return UserInfoController;
+        })();
+        Controllers.UserInfoController = UserInfoController;
     })(Controllers = EducationApp.Controllers || (EducationApp.Controllers = {}));
 })(EducationApp || (EducationApp = {}));
 //# sourceMappingURL=MarkdownController.js.map

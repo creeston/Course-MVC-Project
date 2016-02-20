@@ -36,7 +36,7 @@ namespace EducationSalvation.Controllers
             var collection = new List<PublicationThumbnailModel>();
             using (var db = new PublicationModelContext())
             {
-                collection = db.PublicationModels.Select(p => new 
+                collection = db.PublicationModels.Select(p => new
                 {
                     Date = p.Date,
                     Description = p.Description,
@@ -44,7 +44,7 @@ namespace EducationSalvation.Controllers
                     Stars = p.Stars,
                     Tags = p.TagModels.Select(t => t.Content),
                     Title = p.Title,
-                    UserId = p.AdditionalUserInfoId
+                    UserNickname = p.User.Nickname
                 }
                 ).ToList().Select(obj => new PublicationThumbnailModel()
                 {
@@ -54,10 +54,10 @@ namespace EducationSalvation.Controllers
                     Stars = obj.Stars,
                     Tags = obj.Tags.ToArray(),
                     Title = obj.Title,
-                    UserId = obj.UserId
+                    UserNickname = obj.UserNickname
                 }).ToList();
-                return Json(collection, JsonRequestBehavior.AllowGet);
             }
+            return Json(collection, JsonRequestBehavior.AllowGet);
         }
     }
 }

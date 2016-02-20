@@ -103,14 +103,14 @@ namespace EducationSalvation.Controllers
                     Markdown = model.Markdown,
                     Template = model.Template,
                     Date = model.Date,
-                    Stars = (int)model.RatingModels.Average(r => r.Value),
+                    Stars = model.RatingModels.Count() > 0 ? (int)model.RatingModels.Average(r => r.Value) : 5,
                     UserId = model.AdditionalUserInfoId,
                     IsUserAlreadyGraduateIt = 
                         model.RatingModels.FirstOrDefault(r => r.AdditionalUserInfoId == currentUserId) == null ? false : true,
                     Comments = model.CommentModels.Select(c => new CommentShowingModel()
                     {
                         Id = c.Id,
-                        Author = c.User.FirstName,
+                        Author = c.User.Nickname,
                         Content = c.Content,
                         Date = c.Date,
                         Rating = c.LikeModels.Count(),
@@ -225,7 +225,7 @@ namespace EducationSalvation.Controllers
                 Comments = model.CommentModels.Select(c => new CommentShowingModel()
                 {
                     Id = c.Id,
-                    Author = c.User.FirstName,
+                    Author = c.User.Nickname,
                     Content = c.Content,
                     Date = c.Date,
                     Rating = c.LikeModels.Count(),

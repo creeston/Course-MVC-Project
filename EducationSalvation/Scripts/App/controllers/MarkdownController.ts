@@ -13,7 +13,7 @@ module EducationApp.Controllers {
         }
 
         public getThumbnails() {
-            this.http({ method: 'GET', url: 'GetPublicationThumbnails' })
+            this.http({ method: 'GET', url: '/Home/GetPublicationThumbnails' })
                 .success((data) => { this.publicationThumbnails = data });
         }
     }
@@ -151,7 +151,6 @@ module EducationApp.Controllers {
         constructor($scope: ng.IScope, $http: ng.IHttpService, wizMarkdownSvc) {
             this.scope = $scope;
             this.http = $http;
-
         }
 
 		public PublicationInit(index: number){
@@ -187,7 +186,7 @@ module EducationApp.Controllers {
 			});
 		}
 
-		public likeComment(commentId:number){
+		public likeComment(commentId:number) {
 			var scope = this;
 			this.http({
                 method: 'POST',
@@ -206,14 +205,54 @@ module EducationApp.Controllers {
             }).success(() => { scope.getComments(); scope.commentContent = ""; });
         }
 
-		public getComments(){
+		public getComments() {
 			var scope = this;
             this.http.post('/Publication/GetComments', { publicationId: scope.publication.Id })
 			.success((data) => scope.publication.Comments = data);
 		}
-
-        
     }
 
+	export class UserInfoController {
+		scope:ng.IScope;
+		http: ng.IHttpService;
+		info:any;
+		uniqueCheckingLabel:any;
+		constructor($scope: ng.IScope, $http: ng.IHttpService) {
+			this.scope = $scope; this.http = $http;
+			this.uniqueCheckingLabel = "Check";
+		}
 
+		public getUserInfo(userInfo:any) {
+			this.info = JSON.parse(userInfo);
+		}
+
+		public checkUniqueness() {
+			this.uniqueCheckingLabel = "Checking...";
+			if (this.isNicknameUnique())
+				this.uniqueCheckingLabel = "Name is unique!";
+			else this.uniqueCheckingLabel = "Name is already taken";
+		}
+
+		public isNicknameUnique () {
+			var result = true;
+			this.uniqueCheckingLabel = "checking...";
+			for (var i = 0; i < this.info.Nicknames.length; i++)
+				if (this.info.Nickname == this.info.Nicknames[i])
+					result = false;
+			return result;
+		}
+
+		public sendUserInfo() {
+			var scope = this;
+			if (scope.Validation())
+				this.http.post('/Manage/CreateAdditionalUserInfo', { model: scope.info });
+		}
+
+		public Validation() {
+			var result = true;
+			if (!this.isNicknameUnique())
+				result = false;
+			return result;
+		}
+	}
 }

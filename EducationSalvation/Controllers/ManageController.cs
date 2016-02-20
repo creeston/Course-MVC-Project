@@ -30,35 +30,78 @@ namespace EducationSalvation.Controllers
         }
 
         [HttpGet]
+        public ActionResult Profiles(string Id)
+        {
+            ShowingAdditionalUserInfo Model;
+            using (var db = new PublicationModelContext())
+            {
+                var model = db.AdditionalUserInfoes.FirstOrDefault(u => u.Nickname == Id);
+                Model = new ShowingAdditionalUserInfo()
+                {
+                    Age = model.Age,
+                    Nickname = model.Nickname,
+                    FirstName = model.FirstName,
+                    Gender = model.Gender,
+                    Interests = model.Interests,
+                    LastName = model.LastName,
+                    Location = model.Location,
+                    Publications = model.PublicationModels.Select(p => new {
+                        Date = p.Date, Description = p.Description, Id = p.Id, Stars = p.Stars, Tags = p.TagModels.Select(t => t.Content), Title = p.Title, UserNickname = p.User.Nickname
+                    }).Select(obj => new PublicationThumbnailModel()
+                    {
+                        Date = obj.Date, Description = obj.Description, Id = obj.Id, Stars = obj.Stars, Tags = obj.Tags.ToArray(), Title = obj.Title, UserNickname = obj.UserNickname
+                    }).ToArray()
+                };
+            }
+            return View(Model);
+        }
+
+        [HttpGet]
         public ActionResult CreateAdditionalUserInfo()
         {
-            var Model = new CreatableAdditionalUserInfo();
+            var userId = User.Identity.GetUserId();
+            CreatableAdditionalUserInfo Model;
+            using (var db = new PublicationModelContext())
+            {
+                Guid g = Guid.NewGuid();
+                string GuidString = Convert.ToBase64String(g.ToByteArray());
+                GuidString = GuidString.Replace("=", "");
+                GuidString = GuidString.Replace("+", "");
+
+                var model = new AdditionalUserInfo()
+                {
+                    Id = userId,
+                    Nickname = GuidString,
+                    Age = 0,
+                    FirstName = "",
+                    LastName = "",
+                    Gender = "",
+                    Interests = "",
+                    Location = ""
+                };
+                db.AdditionalUserInfoes.Add(model);
+                db.NicknameModels.Add(new NicknameModel() { Nickname = GuidString, UserId = userId });
+                Model = new CreatableAdditionalUserInfo() { Nicknames = db.NicknameModels.Select(n => n.Nickname).ToArray() };
+                db.SaveChanges();
+            }
             return View(Model);
         }
         [HttpPost]
         public ActionResult CreateAdditionalUserInfo(CreatableAdditionalUserInfo model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
+        { 
             var userId = User.Identity.GetUserId();
             using (var db = new PublicationModelContext())
             {
-                var Model = new AdditionalUserInfo()
-                {
-                    Id = userId,
-                    Nickname = model.Nickname,
-                    Age = model.Age,
-                    FirstName = model.FirstName ?? "",
-                    LastName = model.LastName ?? "",
-                    Gender = model.Gender ?? "",
-                    Interests = model.Interests ?? "",
-                    Location = model.Location ?? ""
-                };
-                db.AdditionalUserInfoes.Add(Model);
-                db.NicknameModels.Add(new NicknameModel() { Nickname = model.Nickname, UserId = userId});
+                var UserModel = db.AdditionalUserInfoes.FirstOrDefault(u => u.Id == userId);
+                var NicknameModel = db.NicknameModels.FirstOrDefault(n => n.UserId == userId);
+                UserModel.Age = model.Age;
+                UserModel.FirstName = model.FirstName ?? "";
+                UserModel.Gender = model.Gender ?? "";
+                UserModel.Interests = model.Interests ?? "";
+                UserModel.LastName = model.LastName ?? "";
+                UserModel.Location = model.Location ?? "";
+                UserModel.Nickname = model.Nickname ?? "";
+                NicknameModel.Nickname = model.Nickname ?? NicknameModel.Nickname;
                 db.SaveChanges();
             }
             return RedirectToAction("Index", "Manage");
@@ -297,7 +340,7 @@ namespace EducationSalvation.Controllers
                     Publications = Model.PublicationModels.Select(p => new
                     {
                         Id = p.Id,
-                        UserId = p.AdditionalUserInfoId,
+                        UserNickname = p.User.Nickname,
                         Date = p.Date,
                         Description = p.Description,
                         Stars = p.Stars,
@@ -307,7 +350,7 @@ namespace EducationSalvation.Controllers
                     }).ToArray().Select(obj => new PublicationThumbnailModel()
                     {
                         Id = obj.Id,
-                        UserId = obj.UserId,
+                        UserNickname = obj.UserNickname,
                         Date = obj.Date,
                         Description = obj.Description,
                         Stars = obj.Stars,

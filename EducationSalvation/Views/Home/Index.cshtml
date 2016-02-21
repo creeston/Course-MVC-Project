@@ -2,10 +2,12 @@
     ViewBag.Title = "Home Page";
 }
 
+@if (User.Identity.IsAuthenticated)
+{
     <button type="button" class="btn btn-default btn-number">
         <span class="glyphicon glyphicon-plus">@Html.ActionLink("create", "Create", "Publication")</span>
     </button>
-    
+}
     <div ng-app="educationModule" ng-controller="IndexController as index" ng-init="index.getThumbnails();">
         <div ng-repeat="post in index.publicationThumbnails">
             <h2>{{post.Title}}</h2>

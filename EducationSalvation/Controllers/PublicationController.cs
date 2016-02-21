@@ -9,6 +9,7 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNet.Identity;
 using MarkdownDeep;
+using Microsoft.AspNet.SignalR;
 
 namespace EducationSalvation.Controllers
 {
@@ -38,6 +39,7 @@ namespace EducationSalvation.Controllers
         public void LikeComment(int CommentId)
         {
             var currentUserId = User.Identity.GetUserId();
+            var commentUser = "";
             using (var db = new PublicationModelContext())
             {
                 db.LikeModels.Add(new LikeModel()
@@ -45,8 +47,11 @@ namespace EducationSalvation.Controllers
                     AdditionalUserInfoId = currentUserId,
                     CommentModelId = CommentId
                 });
+                commentUser = db.CommentModels.FirstOrDefault(c => c.Id == CommentId).AdditionalUserInfoId;
                 db.SaveChanges();
             }
+            Helper.RecountUserMedals(commentUser);
+
         }
 
 
@@ -54,6 +59,7 @@ namespace EducationSalvation.Controllers
         public void SendPublicationGrade(RatingSendingModel model)
         {
             var currentUserId = User.Identity.GetUserId();
+            AdditionalUserInfo clientUser;
             using (var db = new PublicationModelContext())
             {
                 db.RatingModels.Add(new RatingModel()
@@ -62,8 +68,13 @@ namespace EducationSalvation.Controllers
                     Value = model.Value,
                     AdditionalUserInfoId = currentUserId
                 });
+                clientUser = db.PublicationModels.FirstOrDefault(p => p.Id == model.PublicationId).User;
                 db.SaveChanges();
             }
+
+            //////////////////////////!!!!!!!!!!!!!
+            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<Hubs.CommentsHub>();
+            //hubContext.Clients.User(clientUser.Id).display(string.Format("User {0} graduate you at {1} stars!", clientUser.Nickname, model.Value));
         }
 
         [HttpPost]
@@ -126,7 +137,7 @@ namespace EducationSalvation.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        [System.Web.Mvc.Authorize]
         public ActionResult Create()
         {
             var model = new PublicationCreatingModel();
@@ -159,9 +170,9 @@ namespace EducationSalvation.Controllers
         [HttpPost]
         public ActionResult Publish(PublicationCreatingModel model)
         {
+            string currentUserId = User.Identity.GetUserId();
             using (var db = new PublicationModelContext())
             {
-                string currentUserId = User.Identity.GetUserId();
                 var Model = new PublicationModel()
                 {
                     AdditionalUserInfoId = currentUserId,
@@ -191,13 +202,14 @@ namespace EducationSalvation.Controllers
                 db.PublicationModels.Add(Model);
                 db.SaveChanges();
             }
+            Helper.RecountUserMedals(currentUserId);
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         public void SendComment(CommentSendingModel model)
         {
-            var userId = User.Identity.GetUserId();
+            var currentUserId = User.Identity.GetUserId();
             using (var db = new PublicationModelContext())
             {
                 var Model = new CommentModel()
@@ -206,12 +218,13 @@ namespace EducationSalvation.Controllers
                     Date = model.Date, 
                     Rating = 0, 
                     PublicationModelId = model.PublicationId,
-                    AdditionalUserInfoId = userId
+                    AdditionalUserInfoId = currentUserId
                 };
 
                 db.CommentModels.Add(Model);
                 db.SaveChanges();
             }
+            Helper.RecountUserMedals(currentUserId);
         }
 
         [HttpPost]
@@ -249,6 +262,8 @@ namespace EducationSalvation.Controllers
             System.IO.File.Delete(filePath);
             return Json(new { Url = result.Uri, Index = index });
         }
+
+        
     }
 
     public static class Helper
@@ -270,6 +285,33 @@ namespace EducationSalvation.Controllers
             string filePhysicalPath = String.Format("{0}\\{1}", path, file.FileName);
             file.SaveAs(filePhysicalPath);
             return filePhysicalPath;
+        }
+
+        public static void RecountUserMedals(string userId)
+        {
+            if (userId == null) return;
+            using (var db = new PublicationModelContext())
+            {
+                var user = db.AdditionalUserInfoes.FirstOrDefault(u => u.Id == userId);
+                var userSummary = new AdditionalUserSummary()
+                {
+                    PublicationCount = user.PublicationModels.Count(),
+                    CommentsCount = user.CommentModels.Count(),
+                    CommentLikesCount = user.CommentModels.Sum(c => c.LikeModels.Count())
+                };
+                var medalsToUser = new List<int>();
+                foreach (var medal in db.MedalModels)
+                {
+                    if (MedalCheckers.Id(medal.Id).CheckConditions(userSummary))
+                        medalsToUser.Add(medal.Id);
+                }
+                foreach (var medalId in medalsToUser)
+                {
+                    var medalModel = db.MedalModels.FirstOrDefault(m => m.Id == medalId);
+                    medalModel.AdditionalUserInfoes.Add(user);
+                }
+                db.SaveChanges();
+            }
         }
     }
 
@@ -293,5 +335,17 @@ namespace EducationSalvation.Controllers
         }
     }
 
+    public static class MedalCheckers
+    {
+        static List<IMedalChecker> Checkers = new List<IMedalChecker>() {
+            new FirstPostMedal(), new TenPostsMedal(), new TenCommentsMedal(), new TenLikesMedal()
+        };
+
+        public static IMedalChecker Id(int id)
+        {
+            //Medal id starts with 2
+            return Checkers[id - 2];
+        }
+    }
 
 }

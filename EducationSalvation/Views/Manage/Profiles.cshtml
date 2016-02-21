@@ -13,7 +13,12 @@
         <li class="list-group-item">@Model.Gender</li>
         <li class="list-group-item">@Model.Location</li>
     </ul>
-    @Html.ActionLink("Edit", "EditAdditionalInfo", "Manage")
+    @foreach (var medal in Model.Medals)
+    {
+        <img src="@medal.Url">
+        <span>@medal.Description</span>
+
+    }
 
     @foreach (var Publication in Model.Publications)
     {

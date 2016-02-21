@@ -6,7 +6,6 @@ module EducationApp.Controllers {
         scope: ng.IScope;
         http: ng.IHttpService;
         publicationThumbnails: any;
-
         constructor($scope: ng.IScope, $http: ng.IHttpService) {
             this.scope = $scope;
             this.http = $http;
@@ -141,6 +140,8 @@ module EducationApp.Controllers {
     export class PostController {
         scope: ng.IScope;
         http: ng.IHttpService;
+		connection: HubConnection;
+        commentsHub: HubProxy;
         publication: any;
         commentContent: string;
 		rating: any = 3;
@@ -151,6 +152,11 @@ module EducationApp.Controllers {
         constructor($scope: ng.IScope, $http: ng.IHttpService, wizMarkdownSvc) {
             this.scope = $scope;
             this.http = $http;
+			this.connection = $.hubConnection();
+			this.commentsHub = this.connection.createHubProxy("commentsHub");
+			this.commentsHub.on("updateCommentSection", () => this.getComments());
+			this.commentsHub.on("display", (message) => alert(message));
+			this.connection.start();
         }
 
 		public PublicationInit(index: number){
@@ -202,7 +208,9 @@ module EducationApp.Controllers {
                 Content: scope.commentContent,
                 Date: date,
                 PublicationId: scope.publication.Id
-            }).success(() => { scope.getComments(); scope.commentContent = ""; });
+			}).success(() => { scope.commentsHub.invoke("SendComment"); scope.commentContent = ""; });
+            //}).success(() => { scope.getComments(); scope.commentContent = ""; });
+
         }
 
 		public getComments() {

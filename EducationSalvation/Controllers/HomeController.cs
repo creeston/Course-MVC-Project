@@ -13,7 +13,7 @@ namespace EducationSalvation.Controllers
 
         
         public ActionResult Index()
-        {
+        {            
             return View();
         }
 

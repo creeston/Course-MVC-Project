@@ -47,7 +47,27 @@ namespace EducationSalvation.Migrations
             //model = context.AdditionalUserInfoes.FirstOrDefault(u => u.FirstName == "Vasya");
             //model.Nickname = "nagibator";
             //context.NicknameModels.Add(new Models.NicknameModel() { Nickname = "nagibator", UserId = model.Id });
-            //context.SaveChanges();
+            //context.MedalModels.Add(new Models.MedalModel()
+            //{
+            //    Url = "~/StaticResources/Medals/first-post.jpg",
+            //    Description = "Medal for first post",
+            //});
+            //context.MedalModels.Add(new Models.MedalModel()
+            //{
+            //    Url = "~/StaticResources/Medals/ten-posts.jpg",
+            //    Description = "Medal for tenth post",
+            //});
+            //context.MedalModels.Add(new Models.MedalModel()
+            //{
+            //    Url = "~/StaticResources/Medals/ten-comments.jpg",
+            //    Description = "Medal for ten comments",
+            //});
+            //context.MedalModels.Add(new Models.MedalModel()
+            //{
+            //    Url = "~/StaticResources/Medals/ten-likes.jpg",
+            //    Description = "Medal for ten likes on your comments!",
+            //});
+
         }
     }
 }

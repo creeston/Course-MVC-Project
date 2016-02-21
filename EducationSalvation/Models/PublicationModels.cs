@@ -10,6 +10,12 @@ using System.Web.Mvc;
 
 namespace EducationSalvation.Models
 {
+    public interface IMedalChecker
+    {
+        bool CheckConditions(AdditionalUserSummary userSummary);
+    }
+
+
     public class PublicationCreatingModel
     {
         public string Template { get; set; }
@@ -159,6 +165,7 @@ namespace EducationSalvation.Models
         public string Interests { get; set; }
 
         public PublicationThumbnailModel[] Publications;
+        public MedalShowingModel[] Medals;
         
     }
 
@@ -174,6 +181,13 @@ namespace EducationSalvation.Models
         public string Interests { get; set; }
 
         public string[] Nicknames { get; set; }
+    }
+
+    public class AdditionalUserSummary
+    {
+        public int PublicationCount { get; set; }
+        public int CommentsCount { get; set; }
+        public int CommentLikesCount { get; set; }
     }
 
     //DELETE
@@ -217,6 +231,12 @@ namespace EducationSalvation.Models
         public virtual ICollection<LikeModel> LikeModels { get; set; }
     }
 
+    public class MedalShowingModel
+    {
+        public string Url { get; set; }
+        public string Description { get; set; }
+    }
+
     public class MedalModel
     {
         [Key]
@@ -231,6 +251,8 @@ namespace EducationSalvation.Models
         }
 
         public virtual ICollection<AdditionalUserInfo> AdditionalUserInfoes { get; set; }
+
+        public IMedalChecker Checker { get; set; }
     }
 
     public class RatingSendingModel

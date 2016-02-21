@@ -1,4 +1,6 @@
-﻿declare var Dropzone: any;
+﻿/// <reference path="../typings/signalr/signalr.d.ts"/>
+
+declare var Dropzone: any;
 
 angular.module('dropzone', []).directive('dropzone', function () {
     return function (scope, element, attrs) {

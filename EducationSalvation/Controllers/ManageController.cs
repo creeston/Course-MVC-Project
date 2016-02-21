@@ -50,7 +50,8 @@ namespace EducationSalvation.Controllers
                     }).Select(obj => new PublicationThumbnailModel()
                     {
                         Date = obj.Date, Description = obj.Description, Id = obj.Id, Stars = obj.Stars, Tags = obj.Tags.ToArray(), Title = obj.Title, UserNickname = obj.UserNickname
-                    }).ToArray()
+                    }).ToArray(),
+                    Medals = model.MedalModels.Select(m => new MedalShowingModel() { Description = m.Description, Url = m.Url}).ToArray()
                 };
             }
             return View(Model);
@@ -146,20 +147,6 @@ namespace EducationSalvation.Controllers
             }
             return RedirectToAction("Index", "Manage");
         }
-
-        public JsonResult DoesUserNicknameExist(string Nickname)
-        {
-            bool result;
-            using (var db = new PublicationModelContext())
-            {
-                if (db.NicknameModels.FirstOrDefault(n => n.Nickname == Nickname) == null)
-                    result = false;
-                else result = true;
-            }
-            return Json(result);
-        }
-
-
 
 
         public ApplicationSignInManager SignInManager
@@ -356,7 +343,9 @@ namespace EducationSalvation.Controllers
                         Stars = obj.Stars,
                         Tags = obj.Tags.ToArray(),
                         Title = obj.Title
-                    }).ToArray()
+                    }).ToArray(),
+                    Medals = Model.MedalModels.Select(m => new MedalShowingModel() { Description = m.Description, Url = m.Url }).ToArray()
+
                 };
             }
             return View(userRole + "Index", model);

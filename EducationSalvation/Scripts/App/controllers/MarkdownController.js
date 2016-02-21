@@ -117,12 +117,18 @@ var EducationApp;
         Controllers.PublicateController = PublicateController;
         var PostController = (function () {
             function PostController($scope, $http, wizMarkdownSvc) {
+                var _this = this;
                 this.rating = 3;
                 this.range = 3;
                 this.isReadonly = false;
                 this.isUserAlreadyGraduateIt = false;
                 this.scope = $scope;
                 this.http = $http;
+                this.connection = $.hubConnection();
+                this.commentsHub = this.connection.createHubProxy("commentsHub");
+                this.commentsHub.on("updateCommentSection", function () { return _this.getComments(); });
+                this.commentsHub.on("display", function (message) { return alert(message); });
+                this.connection.start();
             }
             PostController.prototype.PublicationInit = function (index) {
                 this.getPublication(index);
@@ -168,7 +174,8 @@ var EducationApp;
                     Content: scope.commentContent,
                     Date: date,
                     PublicationId: scope.publication.Id
-                }).success(function () { scope.getComments(); scope.commentContent = ""; });
+                }).success(function () { scope.commentsHub.invoke("SendComment"); scope.commentContent = ""; });
+                //}).success(() => { scope.getComments(); scope.commentContent = ""; });
             };
             PostController.prototype.getComments = function () {
                 var scope = this;

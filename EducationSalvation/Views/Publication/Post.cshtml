@@ -20,24 +20,31 @@
         </div>
     </div>
     User rating:{{post.publication.Stars}}
-    
+    @if (User.Identity.IsAuthenticated)
+    {
     <div ng-hide="post.publication.IsUserAlreadyGraduateIt">
         <input id="rangeInput" type="range" ng-model="post.range" min="1" max="10"> <span>{{post.range}}</span>
         <button ng-click="post.sendGrade()">Graduate!</button>
     </div>
+    }
     <div>
-        <div>
-            <textarea placeholder="type your opinion" ng-model="post.commentContent"></textarea>
-            <button ng-click="post.sendComment()">Send</button>
-        </div>
-
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div>
+                <textarea placeholder="type your opinion" ng-model="post.commentContent"></textarea>
+                <button ng-click="post.sendComment()">Send</button>
+            </div>
+        }
         <div ng-repeat="comment in post.publication.Comments">
             <p>{{comment.Content}}</p>
             <div>
                 <span>{{comment.Date}}</span>
                 <a ng-href="/Manage/Profiles/{{comment.Author}}">{{comment.Author}}</a>
                 <span>{{comment.Rating}}</span>
-                <button ng-hide="comment.IsUserAlreadyLikedIt" ng-click="post.likeComment(comment.Id)">Like!</button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button ng-hide="comment.IsUserAlreadyLikedIt" ng-click="post.likeComment(comment.Id)">Like!</button>
+                }
             </div>
         </div>
         

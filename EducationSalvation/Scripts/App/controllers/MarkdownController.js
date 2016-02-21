@@ -118,10 +118,9 @@ var EducationApp;
         var PostController = (function () {
             function PostController($scope, $http, wizMarkdownSvc) {
                 var _this = this;
-                this.rating = 3;
+                this.anotherRange = 5;
                 this.range = 3;
                 this.isReadonly = false;
-                this.isUserAlreadyGraduateIt = false;
                 this.scope = $scope;
                 this.http = $http;
                 this.connection = $.hubConnection();
@@ -139,7 +138,7 @@ var EducationApp;
                     method: 'POST',
                     url: '/Publication/GetPublication',
                     data: { Index: index }
-                }).success(function (data) { return scope.publication = data; });
+                }).success(function (data) { scope.publication = data; scope.range = data['Stars']; });
             };
             PostController.prototype.sendGrade = function () {
                 var scope = this;
@@ -154,9 +153,10 @@ var EducationApp;
                     method: 'POST',
                     url: '/Publication/GetPublicationGrade',
                     data: { Index: scope.publication.Id }
-                }).success(function (data) {
-                    scope.publicationGrade = data['Grade'];
-                    scope.isUserAlreadyGraduateIt = data['Result'];
+                })
+                    .success(function (data) {
+                    scope.publication.Stars = data;
+                    scope.publication.IsUserAlreadyGraduateIt = true;
                 });
             };
             PostController.prototype.likeComment = function (commentId) {

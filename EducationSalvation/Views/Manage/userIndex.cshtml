@@ -92,6 +92,13 @@
     </ul>
     @Html.ActionLink("Edit", "EditAdditionalInfo", "Manage")
 
+    @foreach (var medal in ViewBag.AdditionalUserInfo.Medals)
+    {
+        <img src="@medal.Url">
+        <span>@medal.Description</span>
+
+    }
+
     @foreach (var Publication in ViewBag.AdditionalUserInfo.Publications)
     {
             <div >

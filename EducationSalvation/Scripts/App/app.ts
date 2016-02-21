@@ -22,7 +22,7 @@ angular.module('dropzone', []).directive('dropzone', function () {
 
 
 var appModule = angular.module("educationModule", 
-	['ngSanitize', 'wiz.markdown', 'dropzone', 'youtube-embed', 'ngMessages', 'ui.bootstrap']);
+	['ngSanitize', 'wiz.markdown', 'dropzone', 'youtube-embed', 'ngMessages', 'ui.bootstrap','angular-input-stars']);
 
 appModule.controller("MarkdownController", ["$scope", '$http', 'wizMarkdownSvc', ($scope, $http, wizMarkdownSvc) =>
     new EducationApp.Controllers.MarkdownController($scope, $http, wizMarkdownSvc)]);

@@ -1,6 +1,6 @@
 ﻿
     
-
+    <button ng-click="template.showPreview()">Preview</button>
 
     <div id="templateBody" ng-hide="template.previewMode">
         <form name="headerForm" novalidate>
@@ -68,6 +68,7 @@
              <span class="input-group-addon" id="basic-addon0">https://www.youtube.com/watch?v=</span>
              <input type="text" ng-model="template.videos[0]" class="form-control" id="videoInput" aria-describedby="basic-addon0" placeholder="id"> <br>
          </div>
+
 </div>
 
     <div id="preview" ng-show="template.previewMode">

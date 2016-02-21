@@ -49,6 +49,7 @@
         <div class="jumbotron" id="template" ng-include="marked.template.Path | trusted"></div>
     </div>
     <div ng-controller="PublicateController as publicate">
+        <button class="btn btn-default" ng-click="template.showPreview()">Preview</button>
         <button class="btn btn-default" ng-click="publicate.Publish()">Publish</button>
     </div>
 </div>

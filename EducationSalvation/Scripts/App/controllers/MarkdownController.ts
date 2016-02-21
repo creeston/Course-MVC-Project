@@ -144,11 +144,9 @@ module EducationApp.Controllers {
         commentsHub: HubProxy;
         publication: any;
         commentContent: string;
-		rating: any = 3;
+		anotherRange:any = 5;
 		range:any = 3;
 		isReadonly:boolean = false;
-		isUserAlreadyGraduateIt:any = false;
-		publicationGrade:any;
         constructor($scope: ng.IScope, $http: ng.IHttpService, wizMarkdownSvc) {
             this.scope = $scope;
             this.http = $http;
@@ -169,7 +167,7 @@ module EducationApp.Controllers {
                 method: 'POST',
                 url: '/Publication/GetPublication',
                 data: { Index: index }
-            }).success((data) => scope.publication = data);
+            }).success((data) => { scope.publication = data; scope.range = data['Stars']; });
         }
 
 		public sendGrade() {
@@ -186,9 +184,14 @@ module EducationApp.Controllers {
                 method: 'POST',
                 url: '/Publication/GetPublicationGrade',
                 data: { Index: scope.publication.Id }
-            }).success((data) => { 
-				scope.publicationGrade = data['Grade']; 
-				scope.isUserAlreadyGraduateIt = data['Result'];
+            })
+			//.success((data) => { 
+			//	scope.publicationGrade = data['Grade']; 
+			//	scope.isUserAlreadyGraduateIt = data['Result'];
+			//});
+			.success((data) => { 
+				scope.publication.Stars = data; 
+				scope.publication.IsUserAlreadyGraduateIt = true;
 			});
 		}
 

@@ -13,7 +13,7 @@ angular.module('dropzone', []).directive('dropzone', function () {
         });
     };
 });
-var appModule = angular.module("educationModule", ['ngSanitize', 'wiz.markdown', 'dropzone', 'youtube-embed', 'ngMessages', 'ui.bootstrap']);
+var appModule = angular.module("educationModule", ['ngSanitize', 'wiz.markdown', 'dropzone', 'youtube-embed', 'ngMessages', 'ui.bootstrap', 'angular-input-stars']);
 appModule.controller("MarkdownController", ["$scope", '$http', 'wizMarkdownSvc', function ($scope, $http, wizMarkdownSvc) {
         return new EducationApp.Controllers.MarkdownController($scope, $http, wizMarkdownSvc);
     }]);

@@ -77,22 +77,34 @@ namespace EducationSalvation.Controllers
             //hubContext.Clients.User(clientUser.Id).display(string.Format("User {0} graduate you at {1} stars!", clientUser.Nickname, model.Value));
         }
 
+        //[HttpPost]
+        //public JsonResult GetPublicationGrade(int Index)
+        //{
+        //    int grade = 0;
+        //    bool result;
+        //    var currentUserId = User.Identity.GetUserId();
+        //    using (var db = new PublicationModelContext())
+        //    {
+        //        var collection = db.PublicationModels.First(p => p.Id == Index).RatingModels;
+        //        grade = (int)collection.Average(r => r.Value);
+        //        if (collection.FirstOrDefault(r => r.AdditionalUserInfoId == currentUserId) == null)
+        //            result = false;
+        //        else result = true;
+        //    }
+        //    return Json(new { Result = result, Grade = grade});
+        //}
         [HttpPost]
         public JsonResult GetPublicationGrade(int Index)
         {
             int grade = 0;
-            bool result;
-            var currentUserId = User.Identity.GetUserId();
             using (var db = new PublicationModelContext())
             {
                 var collection = db.PublicationModels.First(p => p.Id == Index).RatingModels;
                 grade = (int)collection.Average(r => r.Value);
-                if (collection.FirstOrDefault(r => r.AdditionalUserInfoId == currentUserId) == null)
-                    result = false;
-                else result = true;
             }
-            return Json(new { Result = result, Grade = grade});
+            return Json(grade);
         }
+
 
         [HttpPost]
         public JsonResult GetPublication(int Index)
@@ -106,6 +118,7 @@ namespace EducationSalvation.Controllers
                 Model = new PublicationShowingModel()
                 {
                     Id = model.Id,
+                    Author = model.User.Nickname,
                     Title = model.Title,
                     Description = model.Description,
                     Tags = model.TagModels.Select(m => m.Content).ToArray(),
